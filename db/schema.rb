@@ -10,7 +10,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_11_17_114648) do
+ActiveRecord::Schema[8.0].define(version: 2024_11_20_105800) do
+  create_table "group_members", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "group_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["group_id"], name: "index_group_members_on_group_id"
+    t.index ["user_id"], name: "index_group_members_on_user_id"
+  end
+
+  create_table "groups", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "orders", force: :cascade do |t|
     t.decimal "price"
     t.string "order_number"
@@ -38,6 +54,10 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_17_114648) do
     t.index ["user_id"], name: "index_sessions_on_user_id"
   end
 
+# Could not dump table "tasks" because of following StandardError
+#   Unknown type 'type' for column 'assignor_type'
+
+
   create_table "users", force: :cascade do |t|
     t.string "name"
     t.string "email_address", null: false
@@ -47,6 +67,8 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_17_114648) do
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 
+  add_foreign_key "group_members", "groups"
+  add_foreign_key "group_members", "users"
   add_foreign_key "orders", "users"
   add_foreign_key "sessions", "users"
 end
